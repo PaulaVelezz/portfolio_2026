@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -8,12 +8,33 @@ gsap.registerPlugin(ScrollTrigger);
 const CardBackPattern = ({ letter }) => (
   <svg className="w-full h-full p-4" viewBox="0 0 200 300" fill="none">
     {/* Borders */}
-    <rect x="5" y="5" width="190" height="290" rx="10" stroke="white" strokeWidth="1.5" />
-    <rect x="10" y="10" width="180" height="280" rx="8" stroke="white" strokeWidth="0.75" strokeDasharray="3 3" />
-    
+    <rect
+      x="5"
+      y="5"
+      width="190"
+      height="290"
+      rx="10"
+      stroke="white"
+      strokeWidth="1.5"
+    />
+    <rect
+      x="10"
+      y="10"
+      width="180"
+      height="280"
+      rx="8"
+      stroke="white"
+      strokeWidth="0.75"
+      strokeDasharray="3 3"
+    />
+
     {/* Corner details */}
-    <path d="M5 25h15M25 5v15M175 5v15M195 25h-15M5 275h15M25 295v-15M175 295v-15M195 275h-15" stroke="white" strokeWidth="1" />
-    
+    <path
+      d="M5 25h15M25 5v15M175 5v15M195 25h-15M5 275h15M25 295v-15M175 295v-15M195 275h-15"
+      stroke="white"
+      strokeWidth="1"
+    />
+
     {/* Geometric lines */}
     <line x1="10" y1="50" x2="190" y2="50" stroke="white" strokeWidth="1" />
     <line x1="10" y1="250" x2="190" y2="250" stroke="white" strokeWidth="1" />
@@ -21,8 +42,19 @@ const CardBackPattern = ({ letter }) => (
     <line x1="150" y1="50" x2="50" y2="250" stroke="white" strokeWidth="0.5" />
 
     {/* Center Diamond & Circle */}
-    <path d="M100 90 L160 150 L100 210 L40 150 Z" stroke="white" strokeWidth="1.5" />
-    <circle cx="100" cy="150" r="30" stroke="white" strokeWidth="1.5" fill="#0c2bf7" />
+    <path
+      d="M100 90 L160 150 L100 210 L40 150 Z"
+      stroke="white"
+      strokeWidth="1.5"
+    />
+    <circle
+      cx="100"
+      cy="150"
+      r="30"
+      stroke="white"
+      strokeWidth="1.5"
+      fill="#0c2bf7"
+    />
     <text
       x="100"
       y="158"
@@ -39,38 +71,64 @@ export default function About({ setPage }) {
   const containerRef = useRef(null);
   const cardGroupRef = useRef(null);
   const particleCanvasRef = useRef(null);
-  
-  const [flippedCards, setFlippedCards] = useState([false, false, false, false]);
 
   const cardsData = [
     {
-      letter: 'S',
-      title: 'STRATEGY',
-      services: ['Digital Experience Strategy', 'Technology Strategy', 'Creative Direction', 'Discovery', 'Research'],
+      letter: "S",
+      title: "STRATEGY",
+      services: [
+        "Digital Experience Strategy",
+        "Technology Strategy",
+        "Creative Direction",
+        "Discovery",
+        "Research",
+      ],
     },
     {
-      letter: 'C',
-      title: 'CREATIVE',
-      services: ['Art Direction', 'UX/UI Design', 'Motion Design', 'Interactive Design', 'Illustration'],
+      letter: "C",
+      title: "CREATIVE",
+      services: [
+        "Art Direction",
+        "UX/UI Design",
+        "Motion Design",
+        "Interactive Design",
+        "Illustration",
+      ],
     },
     {
-      letter: 'T',
-      title: 'TECH',
-      services: ['WebGL Development', 'Front End Development', 'Unity/Unreal', 'Interactive Installations', 'AR and VR Experiences'],
+      letter: "T",
+      title: "TECH",
+      services: [
+        "WebGL Development",
+        "Front End Development",
+        "Unity/Unreal",
+        "Interactive Installations",
+        "AR and VR Experiences",
+      ],
     },
     {
-      letter: 'P',
-      title: 'PRODUCTION',
-      services: ['Technical Production', 'Quality Assurance', 'Performance Audits', 'Continuous Integration', 'Deployment Code'],
+      letter: "P",
+      title: "PRODUCTION",
+      services: [
+        "Technical Production",
+        "Quality Assurance",
+        "Performance Audits",
+        "Continuous Integration",
+        "Deployment Code",
+      ],
     },
   ];
+
+  const [flippedCards, setFlippedCards] = useState(
+    Array(cardsData.length).fill(false),
+  );
 
   // 1. Particle Wave Canvas Simulation (Let's Work Together Section)
   useEffect(() => {
     const canvas = particleCanvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let animationFrameId;
@@ -81,14 +139,14 @@ export default function About({ setPage }) {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     resize();
 
     // Generate particles
     const initParticles = () => {
       particles = [];
       const count = Math.min(600, Math.floor(canvas.width * 0.4));
-      const shapes = ['circle', 'square', 'triangle', 'plus'];
+      const shapes = ["circle", "square", "triangle", "plus"];
 
       for (let i = 0; i < count; i++) {
         particles.push({
@@ -112,27 +170,27 @@ export default function About({ setPage }) {
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     const drawSymbol = (c, x, y, size, shape) => {
-      c.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-      c.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      c.strokeStyle = "rgba(255, 255, 255, 0.7)";
+      c.fillStyle = "rgba(255, 255, 255, 0.7)";
       c.lineWidth = 1;
       c.beginPath();
 
-      if (shape === 'circle') {
+      if (shape === "circle") {
         c.arc(x, y, size / 2, 0, Math.PI * 2);
         c.fill();
-      } else if (shape === 'square') {
+      } else if (shape === "square") {
         c.rect(x - size / 2, y - size / 2, size, size);
         c.fill();
-      } else if (shape === 'triangle') {
+      } else if (shape === "triangle") {
         c.moveTo(x, y - size / 2);
         c.lineTo(x + size / 2, y + size / 2);
         c.lineTo(x - size / 2, y + size / 2);
         c.closePath();
         c.fill();
-      } else if (shape === 'plus') {
+      } else if (shape === "plus") {
         c.moveTo(x - size / 2, y);
         c.lineTo(x + size / 2, y);
         c.moveTo(x, y - size / 2);
@@ -152,8 +210,9 @@ export default function About({ setPage }) {
         if (p.x > canvas.width) p.x = 0;
 
         // Sine wave vertical motion
-        const sineY = p.baseY + Math.sin(p.x * p.frequency + time) * p.amplitude;
-        
+        const sineY =
+          p.baseY + Math.sin(p.x * p.frequency + time) * p.amplitude;
+
         // Mouse avoidance/attraction displacement
         const dx = mouse.x - p.x;
         const dy = mouse.y - sineY;
@@ -176,50 +235,87 @@ export default function About({ setPage }) {
     animate();
 
     return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
   // 2. Scroll-linked card animations & triggers
   useEffect(() => {
-    const cards = gsap.utils.toArray('.card-perspective');
+    const cards = gsap.utils.toArray(".card-perspective");
 
-    // Stagger rotation/tilt into view
-    gsap.fromTo(
+    const timeouts = [];
+
+    const entranceTween = gsap.fromTo(
       cards,
-      { y: 100, rotationY: 0, opacity: 0 },
+      {
+        y: 100,
+        rotationY: 0,
+        opacity: 0,
+      },
       {
         y: 0,
         opacity: 1,
         duration: 1.2,
         stagger: 0.15,
-        ease: 'power3.out',
+        ease: "power3.out",
         scrollTrigger: {
           trigger: cardGroupRef.current,
-          start: 'top 75%',
+          start: "top 75%",
         },
-      }
+      },
     );
 
-    // Auto flip cards sequentially on scroll into view for high interaction fidelity
-    ScrollTrigger.create({
+    const flipTrigger = ScrollTrigger.create({
       trigger: cardGroupRef.current,
-      start: 'top 40%',
+      start: "top 40%",
+
+      // ↓ BAJANDO
       onEnter: () => {
         cardsData.forEach((_, i) => {
-          setTimeout(() => {
+          const timeout = setTimeout(() => {
             setFlippedCards((prev) => {
               const updated = [...prev];
               updated[i] = true;
               return updated;
             });
           }, i * 300);
+
+          timeouts.push(timeout);
+        });
+      },
+
+      // ↑ SUBIENDO
+      onLeaveBack: () => {
+        [...cardsData].reverse().forEach((_, reverseIndex) => {
+          const cardIndex = cardsData.length - 1 - reverseIndex;
+
+          const timeout = setTimeout(() => {
+            setFlippedCards((prev) => {
+              const updated = [...prev];
+              updated[cardIndex] = false;
+              return updated;
+            });
+          }, reverseIndex * 200);
+
+          timeouts.push(timeout);
         });
       },
     });
-  }, []);
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+
+      flipTrigger.kill();
+
+      if (entranceTween.scrollTrigger) {
+        entranceTween.scrollTrigger.kill();
+      }
+
+      entranceTween.kill();
+    };
+  }, [cardsData.length]);
 
   const toggleCard = (index) => {
     setFlippedCards((prev) => {
@@ -236,7 +332,6 @@ export default function About({ setPage }) {
     >
       {/* 1. Area of Expertise Section */}
       <section className="max-w-7xl mx-auto w-full px-6 pt-36 pb-20 md:px-12 md:pb-24">
-        
         {/* Headline Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-20 select-none">
           <div className="lg:col-span-8">
@@ -248,11 +343,12 @@ export default function About({ setPage }) {
 
           <div className="lg:col-span-4 flex flex-col items-start lg:items-end gap-6 pt-4 lg:pt-0">
             <p className="text-xs font-sans font-bold tracking-wider leading-relaxed text-white/85 max-w-sm lg:text-right">
-              MULTIDISCIPLINARY EXPERTISE ACROSS STRATEGY, CREATIVE, TECHNOLOGY, AND PRODUCTION.
+              MULTIDISCIPLINARY EXPERTISE ACROSS STRATEGY, CREATIVE, TECHNOLOGY,
+              AND PRODUCTION.
             </p>
             {/* Square badge indicators */}
             <div className="flex gap-2">
-              {['S', 'C', 'T', 'P'].map((l) => (
+              {["S", "C", "T", "P"].map((l) => (
                 <div
                   key={l}
                   className="w-8 h-8 border border-white/40 flex items-center justify-center text-xs font-space font-bold tracking-widest text-white/70"
@@ -265,11 +361,17 @@ export default function About({ setPage }) {
         </div>
 
         {/* Curved Connection Path & Cards Grid */}
-        <div ref={cardGroupRef} className="relative w-full py-16 flex items-center justify-center">
-          
+        <div
+          ref={cardGroupRef}
+          className="relative w-full py-16 flex items-center justify-center"
+        >
           {/* Curved track path behind cards */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 pointer-events-none opacity-40">
-            <svg className="w-full h-full" viewBox="0 0 1000 100" preserveAspectRatio="none">
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 1000 100"
+              preserveAspectRatio="none"
+            >
               <path
                 d="M0,50 Q250,90 500,50 T1000,50"
                 fill="none"
@@ -282,7 +384,14 @@ export default function About({ setPage }) {
           {/* Playing Cards Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full z-10">
             {cardsData.map((card, idx) => {
-              const rotAngle = idx === 0 ? '-rotate-6' : idx === 1 ? '-rotate-2' : idx === 2 ? 'rotate-2' : 'rotate-6';
+              const rotAngle =
+                idx === 0
+                  ? "-rotate-6"
+                  : idx === 1
+                    ? "-rotate-2"
+                    : idx === 2
+                      ? "rotate-2"
+                      : "rotate-6";
               const isFlipped = flippedCards[idx];
 
               return (
@@ -296,7 +405,9 @@ export default function About({ setPage }) {
                   <div
                     className="card-inner w-full h-full shadow-2xl"
                     style={{
-                      transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                      transform: isFlipped
+                        ? "rotateY(180deg)"
+                        : "rotateY(0deg)",
                     }}
                   >
                     {/* CARD BACK Face (Blue Pattern) */}
@@ -344,33 +455,6 @@ export default function About({ setPage }) {
             })}
           </div>
         </div>
-      </section>
-
-      {/* 2. Let's Work Together & Particle Wave Banner */}
-      <section className="relative w-full min-h-[80vh] flex flex-col justify-between items-center bg-[#0c2bf7] py-24 select-none">
-        
-        {/* Dynamic canvas drawing thousands of geometric shapes */}
-        <canvas
-          ref={particleCanvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none"
-        />
-
-        {/* Center Giant Banner Text */}
-        <div className="my-auto text-center px-6 z-10 pointer-events-none">
-          <h2 className="text-6xl sm:text-7xl md:text-9xl font-sans font-medium tracking-tight text-white leading-none">
-            Let's build <br />
-            together!
-          </h2>
-        </div>
-
-        {/* Scrolling Action pill */}
-        <button
-          onClick={() => setPage('projects')}
-          className="h-11 px-8 rounded-full bg-white text-black hover:bg-neutral-100 flex items-center gap-4 text-[10px] font-space font-bold tracking-widest cursor-pointer transition-colors shadow-lg z-10"
-          data-cursor="magnetic"
-        >
-          ↓ CONTINUE TO SCROLL ↓
-        </button>
       </section>
     </div>
   );

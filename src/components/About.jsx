@@ -46,7 +46,7 @@ export function About() {
                 <span className="block font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                   Based in
                 </span>
-                <span className="text-lg font-bold">Buenos Aires</span>
+                <span className="text-lg font-bold">Córdoba</span>
                 <span className="block font-mono text-[10px] text-muted-foreground">
                   Argentina
                 </span>
@@ -152,9 +152,15 @@ export function About() {
               className="flex flex-wrap gap-4"
             >
               {[
-                { label: "LinkedIn", href: "#" },
-                { label: "GitHub", href: "#" },
-                { label: "Behance", href: "#" },
+                {
+                  label: "LinkedIn",
+                  href: "https://www.linkedin.com/in/paula-velez/",
+                },
+                { label: "GitHub", href: "https://github.com/PaulaVelezz" },
+                {
+                  label: "Behance",
+                  href: "https://www.behance.net/___paulavelez",
+                },
                 { label: "CV", href: "#" },
               ].map((link) => (
                 <a

@@ -99,45 +99,57 @@ export default function BackgroundWave() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy;
         vec2 mouseUv = u_mouse.xy / u_resolution.xy;
 
-        // Interaction distortion: warp noise grid coordinates around the cursor
+        // Interactive pushing and warping using a smooth exponential falloff (no hard if-statements)
         vec2 diff = uv - mouseUv;
         float dist = length(diff);
-        vec2 distortedUv = uv;
-
-        // Interactive pushing effect
-        if (dist < 0.4) {
-          float strength = (1.0 - smoothstep(0.0, 0.4, dist)) * 0.08;
-          distortedUv += normalize(diff) * strength;
-        }
-
-        // Scale and animate noise field
-        vec3 noiseCoord = vec3(distortedUv * 3.0, u_time * 0.04);
-        float n1 = snoise(noiseCoord);
-        float n2 = snoise(noiseCoord * 2.2 + vec3(10.0, 20.0, u_time * 0.02)) * 0.45;
-        float noiseVal = n1 + n2;
-
-        // Construct topographic lines (draw when sin of scaled noise is close to zero)
-        float lineFreq = 16.0;
-        float linePhase = u_time * 0.15;
-        float lineValue = sin(noiseVal * lineFreq + linePhase);
         
-        // Anti-aliased line width logic
-        float lineThickness = 0.08;
-        float line = smoothstep(lineThickness, lineThickness - 0.02, abs(lineValue));
+        // Dynamic push force
+        float warpForce = exp(-dist * 4.5) * 0.15;
+        vec2 distortedUv = uv + normalize(diff) * warpForce;
 
-        // Background dark layout color
+        // Visual Layering: Compute two noise octaves with different details and scrolling speeds
+        // Layer 1: Slow, large-scale topographic field
+        vec3 coord1 = vec3(distortedUv * 2.2, u_time * 0.015);
+        float noise1 = snoise(coord1);
+        
+        // Layer 2: Medium-speed, high-frequency details
+        vec3 coord2 = vec3(distortedUv * 4.5 + vec3(17.3, 34.7, u_time * 0.008), u_time * 0.01);
+        float noise2 = snoise(coord2) * 0.4;
+        
+        float finalNoise = noise1 + noise2;
+
+        // Draw Layer 1 Contours (Denser, ultra-thin, low opacity)
+        float freq1 = 28.0;
+        float val1 = sin(finalNoise * freq1 + u_time * 0.08);
+        float line1 = smoothstep(0.018, 0.0, abs(val1));
+
+        // Draw Layer 2 Contours (Medium density, slightly thicker, reacts to noise variations)
+        float freq2 = 14.0;
+        float val2 = sin(finalNoise * freq2 - u_time * 0.05);
+        float line2 = smoothstep(0.024, 0.0, abs(val2));
+
+        // Deep cinematic background colors
         vec3 bgColor = vec3(0.027, 0.027, 0.031); // #070708
 
-        // Line color: deep slate grey / brass-tint blend for cinematic atmosphere
-        vec3 colorA = vec3(0.18, 0.18, 0.22); // Faint steel gray
-        vec3 colorB = vec3(0.24, 0.20, 0.16); // Subtle brass highlight
-        vec3 lineColor = mix(colorA, colorB, noiseVal * 0.5 + 0.5);
+        // Line color palettes: blend faint slate gray and copper highlights based on noise gradient
+        vec3 slateGray = vec3(0.12, 0.13, 0.15); // very dark, subtle slate
+        vec3 copperGlow = vec3(0.26, 0.20, 0.15); // soft warm copper
+        vec3 colorA = mix(slateGray, copperGlow, finalNoise * 0.5 + 0.5);
+        
+        vec3 line1Color = colorA * 0.5; // Layer 1 is fainter
+        vec3 line2Color = colorA * 0.8; // Layer 2 is brighter
 
-        // Vignette to fade out towards edges for depth
-        float vignette = smoothstep(0.9, 0.2, length(uv - 0.5));
+        // Vignette for depth (fades elements smoothly at the edges)
+        float vignette = smoothstep(0.95, 0.35, length(uv - 0.5));
 
-        // Blend lines onto background
-        vec3 finalColor = mix(bgColor, lineColor, line * vignette * 0.25);
+        // Blend layers together onto the background
+        vec3 finalColor = bgColor;
+        finalColor = mix(finalColor, line1Color, line1 * vignette * 0.35);
+        finalColor = mix(finalColor, line2Color, line2 * vignette * 0.45);
+
+        // Add a subtle highlight near the cursor for extra depth
+        float glow = exp(-dist * 3.5) * 0.06;
+        finalColor += copperGlow * glow * vignette;
 
         gl_FragColor = vec4(finalColor, 1.0);
       }

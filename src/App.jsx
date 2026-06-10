@@ -3,6 +3,7 @@ import Header from './components/Header';
 import BackgroundWave from './components/BackgroundWave';
 import CustomCursor from './components/CustomCursor';
 import SmoothScroll from './components/SmoothScroll';
+import HamburgerMenu from './components/HamburgerMenu';
 import Hero from './pages/Hero';
 import About from './pages/About';
 import Projects from './pages/Projects';
@@ -70,6 +71,13 @@ export default function App() {
         setPage={changePage}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
+      />
+
+      {/* Global Hamburger Menu Overlay */}
+      <HamburgerMenu
+        isOpen={menuOpen}
+        setPage={changePage}
+        onClose={() => setMenuOpen(false)}
       />
 
       {/* 4. Smooth Scroll Page Content Wrapper */}
