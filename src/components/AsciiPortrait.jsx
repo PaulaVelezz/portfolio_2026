@@ -150,7 +150,7 @@ export default function AsciiPortrait({ isRevealed = false }) {
             // Flash random character
             const poolIndex = Math.floor(Math.random() * scramblePool.length);
             displayChar = scramblePool[poolIndex];
-            color = "#ff5c35"; // highlight reveal front in theme orange
+            color = "#6d28d9"; // vibrant purple flash
             opacity = 0.95;
           }
           // Interactive Cursor Proximity logic
@@ -167,9 +167,14 @@ export default function AsciiPortrait({ isRevealed = false }) {
             }
 
             // 2. Color transitions: blend from grey to vibrant portfolio orange-red
-            const rVal = Math.round(226 + (255 - 226) * proximityFactor);
-            const gVal = Math.round(226 + (92 - 226) * proximityFactor);
-            const bVal = Math.round(226 + (53 - 226) * proximityFactor);
+            // const rVal = Math.round(226 + (163 - 226) * proximityFactor);
+            // const gVal = Math.round(226 + (230 - 226) * proximityFactor);
+            // const bVal = Math.round(226 + (53 - 226) * proximityFactor);
+            // color = `rgb(${rVal}, ${gVal}, ${bVal})`;
+
+            const rVal = Math.round(226 + (109 - 226) * proximityFactor);
+            const gVal = Math.round(226 + (40 - 226) * proximityFactor);
+            const bVal = Math.round(226 + (217 - 226) * proximityFactor);
             color = `rgb(${rVal}, ${gVal}, ${bVal})`;
 
             opacity = 0.7 + 0.3 * proximityFactor;
@@ -200,16 +205,79 @@ export default function AsciiPortrait({ isRevealed = false }) {
   return (
     <div
       ref={containerRef}
-      className="w-full h-full relative aspect-[0.8] select-none flex items-center justify-center overflow-hidden cursor-crosshair rounded-2xl border border-white/5 bg-[#0a0a0c]/80 backdrop-blur-md p-4 shadow-2xl"
-      aria-label="Interactive computational ASCII portrait of Paula A."
+      className="
+        group
+        w-full h-full relative aspect-[0.8]
+        overflow-hidden rounded-2xl
+        border border-white/5
+        backdrop-blur-md shadow-2xl select-none
+      "
+      aria-label="Interactive computational ASCII portrait of Paula Velez"
       role="img"
     >
       {loading ? (
-        <div className="text-neutral-500 font-space text-[10px] tracking-widest uppercase animate-pulse">
-          Loading system matrix...
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-neutral-500 font-space text-[10px] tracking-widest uppercase animate-pulse">
+            Loading system matrix...
+          </div>
         </div>
       ) : (
-        <canvas ref={canvasRef} className="block w-full h-full" />
+        <>
+          {/* FOTO: siempre visible, base */}
+          <img
+            src="/Perfil_2026.png"
+            alt="Paula Velez"
+            className="
+              absolute inset-0 z-0
+              w-full h-full object-cover
+              scale-100
+              transition-all duration-700 ease-out
+              group-hover:scale-105
+            "
+          />
+
+          {/* FONDO OSCURO DEL ASCII: oculto por defecto, se expande en hover */}
+          <div
+            className="
+              absolute inset-0 z-10
+              bg-[#0a0a0c]/90
+              transition-all duration-700 ease-out
+              [clip-path:polygon(100%_0,100%_0,100%_100%,100%_100%)]
+              group-hover:[clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]
+            "
+          />
+
+          {/* ASCII LAYER: mismo clip-path que el fondo */}
+          <canvas
+            ref={canvasRef}
+            className="
+              absolute inset-0 z-20
+              w-full h-full
+              transition-all duration-700 ease-out
+              [clip-path:polygon(100%_0,100%_0,100%_100%,100%_100%)]
+              group-hover:[clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]
+            "
+          />
+
+          {/* CORNER PEEL: z-30, siempre encima */}
+          <div className="absolute bottom-0 right-0 z-30 w-16 h-16 pointer-events-none">
+            <div
+              className="
+                absolute bottom-0 right-0 w-full h-full
+                bg-gradient-to-tl from-white/20 to-transparent
+                [clip-path:polygon(100%_100%,0_100%,100%_0)]
+                transition-transform duration-500
+                group-hover:scale-110
+              "
+            />
+            <div className="absolute bottom-3 right-3 text-[8px] tracking-[0.25em] text-white/60 font-space uppercase">
+              REVEAL
+            </div>
+          </div>
+
+          {/* Overlay sutil */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+        </>
       )}
     </div>
   );

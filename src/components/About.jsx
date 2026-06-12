@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import ResumeENG from "/CV_Paula_Velez_ Frontend_Developer_(ENG).pdf";
+import ResumeESP from "/CV_Paula_Velez_ Desarrollador_Frontend_(ESP).pdf";
 
 export function About() {
   const sectionRef = useRef(null);
@@ -161,7 +163,8 @@ export function About() {
                   label: "Behance",
                   href: "https://www.behance.net/___paulavelez",
                 },
-                { label: "CV", href: "#" },
+                { label: "CV ESP", href: { ResumeESP } },
+                { label: "CV ENG", href: { ResumeENG } },
               ].map((link) => (
                 <a
                   key={link.label}

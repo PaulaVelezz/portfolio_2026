@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 export default function HamburgerMenu({ isOpen, setPage, onClose }) {
   const containerRef = useRef(null);
@@ -10,12 +10,12 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
   // Close menu on Escape key press (Accessibility requirement)
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   // Trap focus within menu when open
@@ -24,12 +24,14 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
     const container = containerRef.current;
     if (!container) return;
 
-    const focusableElements = container.querySelectorAll('button, a, [tabIndex="0"]');
+    const focusableElements = container.querySelectorAll(
+      'button, a, [tabIndex="0"]',
+    );
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleFocusTrap = (e) => {
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           lastElement.focus();
@@ -43,11 +45,11 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
       }
     };
 
-    container.addEventListener('keydown', handleFocusTrap);
+    container.addEventListener("keydown", handleFocusTrap);
     // Focus first link on open
     if (firstElement) firstElement.focus();
 
-    return () => container.removeEventListener('keydown', handleFocusTrap);
+    return () => container.removeEventListener("keydown", handleFocusTrap);
   }, [isOpen]);
 
   useEffect(() => {
@@ -61,10 +63,10 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
     if (isOpen) {
       // Open Timeline
       const tl = gsap.timeline();
-      
+
       // Ensure element is visible and interactive
-      gsap.set(container, { pointerEvents: 'all', visibility: 'visible' });
-      gsap.set(bg, { skewY: 5, transformOrigin: 'top left', scaleY: 0 });
+      gsap.set(container, { pointerEvents: "all", visibility: "visible" });
+      gsap.set(bg, { skewY: 5, transformOrigin: "top left", scaleY: 0 });
       gsap.set(links, { y: 100, opacity: 0 });
       if (meta) gsap.set(meta, { opacity: 0, y: 30 });
 
@@ -72,28 +74,35 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
         scaleY: 1,
         skewY: 0,
         duration: 0.9,
-        ease: 'power4.inOut',
+        ease: "power4.inOut",
       })
-      .to(links, {
-        y: 0,
-        opacity: 1,
-        duration: 0.7,
-        stagger: 0.08,
-        ease: 'power3.out',
-      }, '-=0.45')
-      .to(meta, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-      }, '-=0.5');
-
+        .to(
+          links,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: "power3.out",
+          },
+          "-=0.45",
+        )
+        .to(
+          meta,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+          },
+          "-=0.5",
+        );
     } else {
       // Close Timeline
       const tl = gsap.timeline({
         onComplete: () => {
-          gsap.set(container, { pointerEvents: 'none', visibility: 'hidden' });
-        }
+          gsap.set(container, { pointerEvents: "none", visibility: "hidden" });
+        },
       });
 
       tl.to(links, {
@@ -101,20 +110,28 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
         opacity: 0,
         duration: 0.45,
         stagger: 0.05,
-        ease: 'power3.in',
+        ease: "power3.in",
       })
-      .to(meta, {
-        opacity: 0,
-        y: -20,
-        duration: 0.35,
-        ease: 'power2.in',
-      }, '-=0.35')
-      .to(bg, {
-        scaleY: 0,
-        skewY: -3,
-        duration: 0.7,
-        ease: 'power4.inOut',
-      }, '-=0.25');
+        .to(
+          meta,
+          {
+            opacity: 0,
+            y: -20,
+            duration: 0.35,
+            ease: "power2.in",
+          },
+          "-=0.35",
+        )
+        .to(
+          bg,
+          {
+            scaleY: 0,
+            skewY: -3,
+            duration: 0.7,
+            ease: "power4.inOut",
+          },
+          "-=0.25",
+        );
     }
   }, [isOpen]);
 
@@ -124,10 +141,10 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
   };
 
   const navLinks = [
-    { label: 'INDEX', page: 'home', desc: 'Return home' },
-    { label: 'ABOUT', page: 'about', desc: 'Creative expertise' },
-    { label: 'PROJECTS', page: 'projects', desc: 'Selected works' },
-    { label: 'CASE STUDY', page: 'detail', desc: 'Devin AI template' },
+    { label: "INDEX", page: "home", desc: "Return home" },
+    { label: "ABOUT", page: "about", desc: "Creative expertise" },
+    { label: "PROJECTS", page: "projects", desc: "Selected works" },
+    { label: "CASE STUDY", page: "detail", desc: "Devin AI template" },
   ];
 
   return (
@@ -155,16 +172,14 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
 
       {/* Content Layout Column Container */}
       <div className="absolute inset-0 flex flex-col justify-between px-6 pt-32 pb-12 md:px-16 md:pb-16 max-w-7xl mx-auto w-full z-10">
-        
         {/* Navigation Links Grid splits */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          
           {/* Main Staggered Links column */}
           <nav className="flex flex-col gap-6 md:gap-8">
             <span className="text-[10px] font-space tracking-[0.3em] text-white/30 text-left">
               NAVIGATION
             </span>
-            
+
             <div className="flex flex-col gap-3">
               {navLinks.map((link, idx) => (
                 <div key={link.label} className="overflow-hidden">
@@ -180,7 +195,7 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
                     <span className="text-xs font-space text-[#ff5c35] opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 focus:opacity-100 focus:translate-x-0 transition-all duration-300">
                       // 0{idx + 1}
                     </span>
-                    
+
                     {/* Heading label shifts right on hover */}
                     <span className="text-4xl sm:text-5xl md:text-7xl font-syne font-black tracking-tight text-white/60 group-hover:text-white group-hover:translate-x-2 focus:text-white focus:translate-x-2 transition-all duration-300 uppercase leading-none">
                       {link.label}
@@ -203,12 +218,15 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
             <span className="text-[10px] font-space tracking-[0.3em] text-white/30 text-left">
               FEATURED WORK
             </span>
-            <h3 className="text-2xl font-serif italic text-white text-left">Devin AI Integration</h3>
+            <h3 className="text-2xl font-serif italic text-white text-left">
+              Devin AI Integration
+            </h3>
             <p className="text-sm text-white/50 font-sans leading-relaxed text-left">
-              An interactive examination of machine learning pipelines, building a custom real-time code agent preview system.
+              An interactive examination of machine learning pipelines, building
+              a custom real-time code agent preview system.
             </p>
             <button
-              onClick={() => handleLinkClick('detail')}
+              onClick={() => handleLinkClick("detail")}
               className="self-start text-xs font-space tracking-widest text-[#ff5c35] hover:text-white transition-colors flex items-center gap-2 mt-4 cursor-pointer"
               data-cursor="magnetic"
               tabIndex={isOpen ? 0 : -1}
@@ -258,7 +276,7 @@ export default function HamburgerMenu({ isOpen, setPage, onClose }) {
           </div>
 
           <div className="text-xs font-space text-white/30">
-            © 2026 PAULA A. ALL RIGHTS RESERVED.
+            © 2026 PAULA VELEZ - ALL RIGHTS RESERVED.
           </div>
         </div>
       </div>

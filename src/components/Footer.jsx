@@ -1,220 +1,162 @@
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import ResumeENG from "/CV_Paula_Velez_ Frontend_Developer_(ENG).pdf";
+import ResumeESP from "/CV_Paula_Velez_ Desarrollador_Frontend_(ESP).pdf";
 
-export default function Footer() {
-  const canvasRef = useRef(null);
-  const containerRef = useRef(null);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
+const asciiChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+?/@<>[]{}";
+
+function AsciiWord({ text }) {
+  const ref = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+    const el = ref.current;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!el) return;
 
-    let animFrameId;
-    let width = 0;
-    let height = 0;
+    let timeout;
 
-    const handleResize = () => {
-      const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      width = rect.width;
-      height = 280; // Keep canvas height fixed at bottom section
+    const scramble = () => {
+      const original = text;
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.scale(dpr, dpr);
+      let iteration = 0;
+
+      clearInterval(timeout);
+
+      timeout = setInterval(() => {
+        el.innerText = original
+          .split("")
+          .map((letter, index) => {
+            if (index < iteration) {
+              return original[index];
+            }
+
+            return asciiChars[Math.floor(Math.random() * asciiChars.length)];
+          })
+          .join("");
+
+        if (iteration >= original.length) {
+          clearInterval(timeout);
+        }
+
+        iteration += 1 / 2;
+      }, 35);
     };
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
-
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-    };
-
-    const handleMouseLeave = () => {
-      mouseRef.current = { x: -1000, y: -1000 };
-    };
-
-    container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
-
-    // Comet Particle setup
-    const cometCount = 6;
-    const comets = Array.from({ length: cometCount }, (_, i) => ({
-      xProgress: Math.random(), // 0 to 1 along x-axis
-      speed: 0.0015 + Math.random() * 0.002,
-      waveIndex: i % 3,
-      size: 1.5 + Math.random() * 1.5,
-      trail: [], // history of past coords for smooth tail drawing
-    }));
-
-    let time = 0;
-
-    // Render loop
-    const animate = () => {
-      time += 0.015;
-      ctx.clearRect(0, 0, width, height);
-
-      // Render 3 faint atmospheric background waves
-      const waveConfigs = [
-        {
-          amp: 24,
-          freq: 0.005,
-          phase: time * 0.4,
-          yOffset: height * 0.45,
-          opacity: 0.06,
-        },
-        {
-          amp: 16,
-          freq: 0.007,
-          phase: -time * 0.3,
-          yOffset: height * 0.5,
-          opacity: 0.08,
-        },
-        {
-          amp: 30,
-          freq: 0.004,
-          phase: time * 0.2,
-          yOffset: height * 0.55,
-          opacity: 0.05,
-        },
-      ];
-
-      const mouse = mouseRef.current;
-
-      waveConfigs.forEach((wave, wIdx) => {
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(255, 92, 53, ${wave.opacity})`;
-        ctx.lineWidth = 1.0;
-
-        for (let x = 0; x < width; x += 4) {
-          // Calculate baseline sine wave coordinate
-          let y =
-            wave.yOffset + Math.sin(x * wave.freq + wave.phase) * wave.amp;
-
-          // Apply cursor-proximity ripple distortion
-          const dx = x - mouse.x;
-          const dy = y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 150) {
-            const force = (150 - dist) * 0.35;
-            // Push wave coordinates away from cursor coordinates
-            y += Math.sin(x * 0.05 - time * 3) * force;
-          }
-
-          if (x === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
-      });
-
-      // Animate and render comets flowing along wave vectors
-      comets.forEach((comet) => {
-        // Move along x-axis
-        comet.xProgress += comet.speed;
-        if (comet.xProgress > 1.0) {
-          comet.xProgress = 0;
-          comet.speed = 0.0015 + Math.random() * 0.002;
-          comet.waveIndex = Math.floor(Math.random() * waveConfigs.length);
-        }
-
-        const wave = waveConfigs[comet.waveIndex];
-        const x = comet.xProgress * width;
-
-        // Calculate position on wave with cursor response
-        let y = wave.yOffset + Math.sin(x * wave.freq + wave.phase) * wave.amp;
-        const dx = x - mouse.x;
-        const dy = y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 150) {
-          const force = (150 - dist) * 0.35;
-          y += Math.sin(x * 0.05 - time * 3) * force;
-        }
-
-        // Add coordinate to trail history
-        comet.trail.push({ x, y });
-        if (comet.trail.length > 25) {
-          comet.trail.shift();
-        }
-
-        // Draw fading comet trail lines
-        if (comet.trail.length > 1) {
-          ctx.beginPath();
-          ctx.lineWidth = comet.size * 0.8;
-
-          for (let i = 0; i < comet.trail.length - 1; i++) {
-            const pt1 = comet.trail[i];
-            const pt2 = comet.trail[i + 1];
-            const trailOpacity = (i / comet.trail.length) * 0.25;
-
-            ctx.strokeStyle = `rgba(255, 92, 53, ${trailOpacity})`;
-            ctx.beginPath();
-            ctx.moveTo(pt1.x, pt1.y);
-            ctx.lineTo(pt2.x, pt2.y);
-            ctx.stroke();
-          }
-        }
-
-        // Draw glowing comet head particle
-        ctx.beginPath();
-        ctx.arc(x, y, comet.size, 0, Math.PI * 2);
-        ctx.fillStyle = "#ff5c35";
-        ctx.shadowColor = "#ff5c35";
-        ctx.shadowBlur = 8;
-        ctx.globalAlpha = 0.85;
-        ctx.fill();
-
-        // Reset canvas shadow attributes to prevent performance drag
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1.0;
-      });
-
-      animFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
+    el.addEventListener("mouseenter", scramble);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animFrameId);
+      el.removeEventListener("mouseenter", scramble);
+      clearInterval(timeout);
     };
-  }, []);
+  }, [text]);
 
   return (
-    <footer
-      ref={containerRef}
-      className="relative w-full bg-[#0a0a0c] text-white pt-24 pb-12 z-10 overflow-hidden select-none border-t border-white/5"
-      role="contentinfo"
-      aria-label="Footer area"
+    <div
+      ref={ref}
+      className="
+        font-mono
+        font-black
+        leading-[0.82]
+        tracking-[-0.06em]
+        text-white
+        cursor-default
+        select-none
+      "
     >
-      {/* Comet wave canvas background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute bottom-0 left-0 w-full h-[280px] pointer-events-none z-0 opacity-80"
-      />
+      {text}
+    </div>
+  );
+}
 
-      <div className="max-w-7xl mx-auto w-full px-6 md:px-12 relative z-10 flex flex-col gap-16">
-        {/* Contact CTA banner */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          <div className="md:col-span-8 text-left">
-            <span className="text-[10px] text-[#ff5c35] font-space tracking-[0.3em] block mb-3">
+export default function Footer() {
+  return (
+    <footer
+      className="
+        relative
+        overflow-hidden
+        bg-black
+        border-t
+        border-white/5
+      "
+    >
+      {/* Glow */}
+      <div
+        className="
+          absolute
+          inset-0
+          pointer-events-none
+          opacity-40
+        "
+      >
+        <div
+          className="
+            absolute
+            top-0
+            left-1/2
+            -translate-x-1/2
+            w-[800px]
+            h-[800px]
+            rounded-full
+            blur-[180px]
+            bg-[#6D28D9]/20
+          "
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-5">
+        {/* STATUS */}
+        <div
+          className="
+            flex
+            items-center
+            gap-3
+            mb-12
+            mt-5
+          "
+        >
+          <div className="relative">
+            <div
+              className="
+                w-3 h-3
+                rounded-full
+                bg-[#A3E635]
+              "
+            />
+
+            <div
+              className="
+                absolute
+                inset-0
+                rounded-full
+                bg-[#A3E635]
+                animate-ping
+                opacity-40
+              "
+            />
+          </div>
+
+          <span
+            className="
+              text-xs
+              tracking-[0.3em]
+              uppercase
+              text-neutral-400
+            "
+          >
+            Available for select projects
+          </span>
+        </div>
+        {/* CONTACT */}
+        <div
+          className="
+            grid
+            lg:grid-cols-12
+            gap-16
+            mb-24
+          "
+        >
+          <div className="md:col-span-8 lg:col-span-6 text-left">
+            <span className="text-[10px] text-[#a3e635] font-space tracking-[0.3em] block mb-3">
               // LET'S CONNECT
             </span>
             <h2 className="text-4xl sm:text-6xl font-sans font-black tracking-tighter uppercase leading-none">
@@ -223,7 +165,7 @@ export default function Footer() {
             </h2>
             <a
               href="mailto:velezpaula.a@gmail.com"
-              className="text-2xl sm:text-4xl font-space font-bold text-white hover:text-[#ff5c35] transition-colors mt-6 inline-block underline decoration-1 underline-offset-8"
+              className="text-2xl sm:text-4xl font-space font-bold text-white hover:text-[#a3e635] transition-colors mt-6 inline-block underline decoration-1 underline-offset-8"
               data-cursor="magnetic"
             >
               velezpaula.a@gmail.com
@@ -231,16 +173,16 @@ export default function Footer() {
           </div>
 
           {/* Social Links & Credentials Grid */}
-          <div className="md:col-span-4 grid grid-cols-2 gap-8 text-left text-xs font-space tracking-widest pl-0 md:pl-8">
+          <div className="md:col-span-4 lg:col-span-6 grid grid-cols-2 text-left text-xs font-space tracking-widest pl-0 md:pl-8">
             <div className="flex flex-col gap-3">
               <span className="text-[10px] text-neutral-500">// SOCIALS</span>
               <ul className="flex flex-col gap-2">
                 <li>
                   <a
-                    href="https://github.com"
+                    href="https://github.com/PaulaVelezz"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
                     GITHUB
@@ -248,10 +190,10 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href="https://linkedin.com"
+                    href="https://www.linkedin.com/in/paula-velez/"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
                     LINKEDIN
@@ -259,13 +201,24 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href="https://twitter.com"
+                    href="https://www.behance.net/___paulavelez"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
-                    TWITTER
+                    BEHANCE
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://t.me/PaulaVelezz"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-[#a3e635] transition-colors"
+                    data-cursor="pointer"
+                  >
+                    TELEGRAM
                   </a>
                 </li>
               </ul>
@@ -277,28 +230,37 @@ export default function Footer() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
-                    CASE STUDIES
+                    SERVICES
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
-                    CURRICULUM
+                    PROJECTS
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#"
-                    className="hover:text-[#ff5c35] transition-colors"
+                    href={ResumeESP}
+                    className="hover:text-[#a3e635] transition-colors"
                     data-cursor="pointer"
                   >
-                    GLSL LABS
+                    CV ESP
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={ResumeENG}
+                    className="hover:text-[#a3e635] transition-colors"
+                    data-cursor="pointer"
+                  >
+                    CV ENG
                   </a>
                 </li>
               </ul>
@@ -306,10 +268,41 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Footer Base copyright credits */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-t border-white/5 pt-8 text-[10px] font-space tracking-widest text-neutral-500">
-          <span>© 2026 PAULA A. ALL RIGHTS RESERVED.</span>
-          <span>CÓRDOBA // ARGENTINA</span>
+        {/* HERO TITLE */}
+        <div className="mb-20">
+          <div
+            className="
+              text-[11vw]
+              leading-none
+              whitespace-nowrap
+            "
+          >
+            <AsciiWord text="CREATIVE FRONTEND" />
+          </div>
+        </div>
+
+        {/* BOTTOM */}
+        <div
+          className="
+            flex
+            flex-col
+            md:flex-row
+            justify-between
+            gap-4
+            pt-8
+            border-t
+            border-white/10
+            text-neutral-500
+            text-xs
+            uppercase
+            tracking-[0.2em]
+          "
+        >
+          <span>© 2026 Paula Velez</span>
+
+          <span>Built with React · GSAP · ASCII Systems</span>
+
+          <span>Córdoba — Argentina</span>
         </div>
       </div>
     </footer>

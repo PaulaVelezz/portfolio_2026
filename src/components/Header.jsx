@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { BiMenuAltRight } from "react-icons/bi";
 
 export default function Header({
   currentPage,
@@ -44,7 +45,7 @@ export default function Header({
       <div className="flex items-center gap-2">
         <a
           href="mailto:velezpaula.a@gmail.com"
-          className="h-11 px-6 bg-[#ff5c35] hover:bg-[#e04b27] flex items-center text-white text-[10px] font-space font-bold tracking-widest transition-colors cursor-pointer rounded-full"
+          className="h-11 px-6 bg-[#6d28d9] hover:bg-[#a3e635] flex items-center text-white text-[10px] font-space font-bold tracking-widest transition-colors cursor-pointer rounded-full"
           data-cursor="magnetic"
         >
           LET'S WORK TOGETHER
@@ -52,13 +53,12 @@ export default function Header({
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="h-11 px-6 rounded-full bg-white hover:bg-neutral-100 flex items-center gap-3 text-black text-[11px] font-space font-bold tracking-widest cursor-pointer shadow-lg transition-colors"
+          className="h-11 px-6 rounded-full bg-white hover:bg-neutral-100 flex items-center gap-3 text-black hover:text-[#6d28d9] text-[11px] font-space font-bold tracking-widest cursor-pointer shadow-lg transition-colors"
           data-cursor="magnetic"
         >
           {menuOpen ? "CLOSE" : "MENU"}
           <div className="flex flex-col gap-[3px] items-center justify-center">
-            <span className="w-1 h-1 bg-black rounded-full" />
-            <span className="w-1 h-1 bg-black rounded-full" />
+            <BiMenuAltRight className="text-2xl" />
           </div>
         </button>
       </div>

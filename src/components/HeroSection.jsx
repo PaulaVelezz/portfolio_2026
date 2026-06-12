@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import AsciiPortrait from "./AsciiPortrait";
+import { LiaFileDownloadSolid } from "react-icons/lia";
+import { TbCircleArrowDown, TbCircleArrowRight } from "react-icons/tb";
+import ResumeENG from "/CV_Paula_Velez_ Frontend_Developer_(ENG).pdf";
+import ResumeESP from "/CV_Paula_Velez_ Desarrollador_Frontend_(ESP).pdf";
 
 // Premium Text Scrambling Reveal Component
 function ScrambleText({
@@ -90,11 +94,11 @@ export default function HeroSection({ setPage }) {
       <div className="w-full flex justify-between items-center px-6 py-6 md:px-12 border-b border-white/5">
         <button
           onClick={() => setPage("home")}
-          className="text-2xl font-black tracking-tighter cursor-pointer text-white font-syne select-none hover:text-[#ff5c35] transition-colors"
+          className="text-3xl font-bold cursor-pointer text-white font-korium select-none hover:text-[#a3e635] transition-colors"
           data-cursor="magnetic"
           aria-label="Home page logo link"
         >
-          PAULA A.
+          PAULA VELEZ
         </button>
       </div>
 
@@ -127,7 +131,7 @@ export default function HeroSection({ setPage }) {
           {/* Subtext reveal - triggered after title settles */}
           <div className="hero-sub-reveal opacity-0 max-w-lg">
             <p className="text-sm md:text-base text-neutral-400 font-sans leading-relaxed">
-              Paula A. is an interactive developer sculpting
+              Paula Velez is an interactive developer sculpting
               hardware-accelerated interfaces. Focused on motion design,
               interactive physics, and high-performance WebGL modules.
             </p>
@@ -135,23 +139,108 @@ export default function HeroSection({ setPage }) {
 
           {/* Interactive CTAs */}
           <div className="hero-sub-reveal opacity-0 flex items-center gap-6 mt-4">
-            <div className="flex items-center">
+            {/* CV Dropdown */}
+            <div className="relative group">
               <button
-                onClick={() => setPage("projects")}
-                className="h-12 px-6 bg-[#ff5c35] hover:bg-[#e04b27] flex items-center text-white text-xs font-space font-bold tracking-widest transition-colors cursor-pointer rounded-l-full"
+                className="h-11 px-8 bg-[#84CC16] hover:bg-[#a3e635] flex items-center  gap-2 text-white text-xs font-space font-bold tracking-widest transition-colors cursor-pointer rounded-2xl"
                 data-cursor="magnetic"
               >
-                EXPLORE WORK
+                CV / RESUME
+                <span>
+                  <TbCircleArrowDown />
+                </span>
               </button>
-              <button
-                onClick={() => setPage("projects")}
-                className="w-12 h-12 bg-[#ff5c35]/90 hover:bg-[#ff5c35] text-white border-l border-black/10 flex items-center justify-center text-lg font-bold transition-colors cursor-pointer rounded-r-full"
-                data-cursor="magnetic"
-                aria-label="Quick view portfolio list"
+
+              <div
+                className="
+                absolute
+                top-full
+                left-0
+                mt-2
+                min-w-[180px]
+                bg-[#070708]
+                border
+                border-white/10
+                opacity-0
+                invisible
+                translate-y-2
+                group-hover:opacity-100
+                group-hover:visible
+                group-hover:translate-y-0
+                transition-all
+                duration-300
+                rounded-2xl
+                overflow-hidden
+              "
               >
-                +
-              </button>
+                <a
+                  href={ResumeESP}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  arialabel="Spanish resume link"
+                  className="
+                  block
+                  px-5
+                  py-4
+                  text-xs
+                  tracking-widest
+                  font-space
+                  text-white
+                  hover:bg-white/5
+                "
+                >
+                  CV (ESP) <LiaFileDownloadSolid />
+                </a>
+
+                <a
+                  href={ResumeENG}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  arialabel="English resume link"
+                  className="
+                  block
+                  px-5
+                  py-4
+                  text-xs
+                  tracking-widest
+                  font-space
+                  text-white
+                  hover:bg-white/5
+                  border-t
+                  border-white/10
+                "
+                >
+                  CV (ENG) <LiaFileDownloadSolid />
+                </a>
+              </div>
             </div>
+
+            {/* Secondary CTA */}
+            <button
+              onClick={() => setPage("projects")}
+              className="
+              text-zinc-900
+               bg-white
+              hover:text-[#6d28d9]
+              h-11
+              px-6
+              rounded-2xl
+              text-xs
+              font-space
+              font-bold
+              tracking-widest
+              transition-colors
+              flex
+              items-center
+              gap-2
+            "
+              data-cursor="magnetic"
+            >
+              EXPLORE WORK
+              <span>
+                <TbCircleArrowRight />
+              </span>
+            </button>
           </div>
         </div>
         <div className="lg:col-span-5 flex justify-center lg:justify-end overflow-hidden w-full">
